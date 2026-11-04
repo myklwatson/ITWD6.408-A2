@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Why do I have to pay a service fee?",
+    "answer": "A service fee is only charged for repairs to devices that are no longer under warranty."
+  },
+  {
+    "question": "What is the bond for?",
+    "answer": "The bond covers any damage done to the courtesy phone and/or charger. It is refunded when the phone and charger are returned safe and undamaged. Business customers are not charged a bond, in accordance with the terms of their contract."
+  },
+  {
+    "question": "Do I need a charger with my courtesy phone?",
+    "answer": "No, a charger is optional. You can choose one from the charger list when booking. If you added one by accident, select \"None\" to remove it."
+  },
+  {
+    "question": "Why isn't my phone under warranty?",
+    "answer": "The length of your phone's warranty depends on the warranty package you chose when you bought it. The standard is 24 months, calculated from the purchase date."
+  },
+  {
+    "question": "How long will my repair take?",
+    "answer": "It depends on the condition of your phone, but repairs normally take 5 to 7 working days."
+  },
+  {
+    "question": "How do you protect the private information on my phone?",
+    "answer": "We comply with all relevant laws regarding privacy and client confidentiality."
+  },
+  {
+    "question": "Where do you get your replacement parts?",
+    "answer": "We will send you a quote from all the vendors who supply replacement parts, so you can compare them and make your choice."
+  },
+  {
+    "question": "What happens if my phone is damaged further after I leave it with you?",
+    "answer": "We take great care to make sure this does not happen. If it does, please contact us straight away so we can resolve it."
+  },
+  {
+    "question": "What kind of warranty do you offer and what does it cover?",
+    "answer": "Our repair warranty is typically 1 month. It covers parts and service only."
+  },
+  {
+    "question": "What does the repair estimate include?",
+    "answer": "The repair estimate includes both replacement parts and labour."
+  }
+]

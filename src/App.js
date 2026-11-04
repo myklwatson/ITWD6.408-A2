@@ -1,19 +1,17 @@
-//IMPORT
+// IMPORT
 
-import './App.css';
-import Header from "./components/include/Header";
+import "./App.css";
+import Header from "./components/include/Header.js";
 import Home from "./components/Home.js";
-import Footer from "./components/include/Footer";
-import AdvancedJS from "./components/AdvancedJS";
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import FAQ from "./components/FAQ";
-import Bookings from "./components/Bookings";
-import {useEffect} from 'react';
+import Footer from "./components/include/Footer.js";
+import AdvancedJS from "./components/AdvancedJS.js";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import FAQ from "./components/FAQ.js";
+import Bookings from "./components/Bookings.js";
+import { useEffect } from "react";
 
-
-
-  // Functions & Methods
-  function ScrollToTop() {
+// FUNCTIONS
+function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -23,51 +21,43 @@ import {useEffect} from 'react';
   return null;
 }
 
-
-
-//FUNCTION COMPONENT
+// FUNCTION COMPONENT
 function App() {
-  
 
-
-
-  //UI Rendering
+  // UI RENDERING
   return (
     <>
-      <div style={{overflowX:'hidden'}}>
-      
-      <BrowserRouter>  
-        {/* ScrollToTop Function */}
-        <ScrollToTop />
+      <div style={{ overflowX: "hidden" }}>
+        {" "}
+        {/* hide x scroll due to initial bootstrap margin settings */}
+        <BrowserRouter>
+          {/* ScrollToTop Function */}
+          <ScrollToTop />
 
-        {/* Header Component */}
-        <Header />
+          {/* Header Component */}
+          <Header />
 
-        <Routes>
-          {/* Home Component */}
-          <Route path="/" element={<Home />} />
+          <Routes>
+            {/* Home Component */}
+            <Route path="/" element={<Home />} />
 
-          {/* Extension Component */}
-          <Route path="/AdvancedJS" element={<AdvancedJS />} />
+            {/* Extension Component */}
+            <Route path="/AdvancedJS" element={<AdvancedJS />} />
 
-          {/* FAQ Component */}
-          <Route path="/FAQ" element={<FAQ />} />
+            {/* FAQ Component */}
+            <Route path="/FAQ" element={<FAQ />} />
 
-          {/* Bookings Component */}
-          <Route path="/Bookings" element={<Bookings />} />
-        </Routes>
-      
-        {/* Footer Component */}
-        <Footer />
+            {/* Bookings Component */}
+            <Route path="/Bookings" element={<Bookings />} />
+          </Routes>
+
+          {/* Footer Component */}
+          <Footer />
         </BrowserRouter>
-        
       </div>
     </>
-
-  
   );
 }
 
-
-//EXPORT
+// EXPORT
 export default App;

@@ -1,26 +1,40 @@
-//IMPORT
-import {Link} from 'react-router-dom';
+// IMPORT
 
-//FUNCTION COMPONENT 
-function FormButtons() {
+// FUNCTION COMPONENT
+function FormButtons({ resetForm }) {
+  // BUTTON STYLE
+  const buttonStyle = {
+    width: "6em",
+    height: "3em",
+  };
 
-    const buttonStyle = {
-        width: '10em',
-        height: '4em',
-    };
+  // UI RENDERING
+  return (
+    <div>
+      <input
+        type="submit"
+        className="btn me-3 fw-bold text-dark bg-white"
+        style={buttonStyle}
+        value="SUBMIT"
+      />
+      <input
+        type="button"
+        className="btn me-3 fw-bold text-dark bg-white"
+        style={buttonStyle}
+        value="RESET"
+        onClick={resetForm}
+      />
 
-    
- //Component UI Rendering
- return(
-    <>
-            <input type="submit" className="btn me-3 fw-bold text-dark bg-white" style={buttonStyle} value="SUBMIT" />
-            <input type="reset" className="btn me-3 fw-bold text-dark bg-white" style={buttonStyle} value="RESET" />
-            <Link to="/FAQ">
-                <input type="button" className="btn me-3 fw-bold text-dark bg-white" style={buttonStyle} value="FAQ" />
-            </Link>
-    </>
-);
+      <input
+        type="button"
+        className="btn fw-bold text-dark bg-white"
+        style={buttonStyle}
+        value="FAQ"
+        onClick={() => window.open("/FAQ", "_blank")}
+      />
+    </div>
+  );
 }
 
-//EXPORT
-export default FormButtons; 
+// EXPORT
+export default FormButtons;

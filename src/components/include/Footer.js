@@ -1,33 +1,31 @@
-//IMPORT
+// IMPORT
 
-//FUNCTION COMPONENT 
+// FUNCTION COMPONENT
 function Footer() {
+  // DATA
+  const footerStyle = {
+    minHeight: "10vh",
+    fontSize: "1em",
+    color: "white",
+    backgroundColor: "#293443",
 
-    //State
-    
-    //Data
-    const footerStyle = {
-        minHeight: '10vh',
-        fontSize: '1.2em',
-        color: 'white',
-        backgroundColor: '#293443',
-        /**centralise vert and horz content */
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-    };
+    // CENTRALISE CONTENT
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
 
-    //Functions & Methods
-
-    //UI Rendering
-    return(
-        <>
-            <footer style={footerStyle}>
-                <p className='text-center'>&copy; Michael Watson 2026 - All Rights Reserved.</p>
-            </footer>
-        </>
-    );
+  // UI RENDERING
+  return (
+    <>
+      <footer style={footerStyle}>
+        <p className="text-center">
+          &copy; Michael Watson 2026 - All Rights Reserved.
+        </p>
+      </footer>
+    </>
+  );
 }
 
-//EXPORT
+// EXPORT
 export default Footer;
