@@ -7,6 +7,7 @@ import FormButtons from "./Home/FormButtons.js";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { supabase } from "./supabaseClient.js";
+import { useAuth } from "./AuthContext.js"
 
 // CONSTANTS - initial values used for both useState and resetForm
 const INITIAL_CUSTOMER = {
@@ -48,6 +49,8 @@ const INITIAL_COST = {
 
 // FUNCTION COMPONENT
 function Home() {
+  const { user } = useAuth();
+
   // STATE - form data for each child component
   const [customerDetails, setCustomerDetails] = useState(INITIAL_CUSTOMER);
   const [repairDetails, setRepairDetails] = useState(INITIAL_REPAIR);
@@ -100,6 +103,7 @@ function Home() {
             photoUrl = supabase.storage.from('repair-photos').getPublicUrl(path).data.publicUrl;
         }
       const row = {
+        user_id: user?.id ?? null,   // links the booking to the account (null if logged out)
         customer_type: sharedCustomerType,
 
         title: customerDetails.title,

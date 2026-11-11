@@ -9,6 +9,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import FAQ from "./components/FAQ.js";
 import Bookings from "./components/Bookings.js";
 import { useEffect } from "react";
+import Login from "./components/Login.js";
+import { AuthProvider } from "./components/AuthContext.js";
 
 // FUNCTIONS
 function ScrollToTop() {
@@ -30,6 +32,7 @@ function App() {
       <div style={{ overflowX: "hidden" }}>
         {" "}
         {/* hide x scroll due to initial bootstrap margin settings */}
+        <AuthProvider>
         <BrowserRouter>
           {/* ScrollToTop Function */}
           <ScrollToTop />
@@ -49,11 +52,15 @@ function App() {
 
             {/* Bookings Component */}
             <Route path="/Bookings" element={<Bookings />} />
+
+            {/* Login / Register / Account Component */}
+            <Route path="/Login" element={<Login />} />
           </Routes>
 
           {/* Footer Component */}
           <Footer />
         </BrowserRouter>
+        </AuthProvider>
       </div>
     </>
   );

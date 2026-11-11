@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { AddressAutofill } from "@mapbox/search-js-react"; // Mapbox Address Autofill 
 
 
+
 // FUNCTION COMPONENT
 function FormCustomerDetail({ passDataToParent, sendCustomerDetails }) {
   // STATE - customer type

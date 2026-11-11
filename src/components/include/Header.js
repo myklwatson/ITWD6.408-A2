@@ -2,6 +2,7 @@
 
 import { Link, useLocation } from "react-router-dom"; // Link used for navigation, useLocation used to update header title
 import { useEffect } from "react";
+import { useAuth } from "../AuthContext";
 
 // FUNCTION COMPONENT
 function Header() {
@@ -31,6 +32,11 @@ function Header() {
     height: "50px",
   };
 
+  const accountButtonStyle = {
+    backgroundColor: '#7a6fa8',
+    height: '50px'
+  };
+
   // PAGE TITLE LINKING - header update
   const pageContent = {
     "/": {
@@ -49,7 +55,15 @@ function Header() {
       pagetitle: "Bookings",
       title: "Bookings | Phone Fix Booking System",
     },
+
+    "/Login": {
+        pagetitle: "Account",
+        title: "Account | Phone Fix Booking System",
+    },
   };
+
+
+  const { user } = useAuth();
 
   const location = useLocation();
   const currentPage = pageContent[location.pathname] || {
@@ -77,33 +91,45 @@ function Header() {
             {/*Home Button*/}
             <Link
               to="/"
-              className="col-12 col-md-4 p-0 m-0 border border-dark
+              className="col-12 col-md-3 p-0 m-0 border border-dark
                                             text-center fw-bold text-white d-flex align-items-center 
                                             justify-content-center"
               style={homeButtonStyle}
             >
               HOME
             </Link>
+            
             {/*Extension Button*/}
             <Link
               to="/AdvancedJS"
-              className="col-12 col-md-4 p-0 m-0 border border-dark
+              className="col-12 col-md-3 p-0 m-0 border border-dark
                                             text-center fw-bold text-white d-flex align-items-center 
                                             justify-content-center"
               style={extensionButtonStyle}
             >
               EXTENSION
             </Link>
+            
             {/*Bookings Button*/}
             <Link
               to="/Bookings"
-              className="col-12 col-md-4 p-0 m-0 border border-dark
+              className="col-12 col-md-3 p-0 m-0 border border-dark
                                             text-center fw-bold text-white d-flex align-items-center 
                                             justify-content-center"
               style={bookingsButtonStyle}
             >
               BOOKINGS
             </Link>
+            
+            {/*Account Button (shows LOGIN, or ACCOUNT once logged in)*/}
+            <Link 
+              to="/Login" 
+              className="col-12 col-md-3 p-0 m-0 border border-dark
+                                            text-center fw-bold text-white d-flex align-items-center 
+                                            justify-content-center" 
+              style={accountButtonStyle}>{user ? 'ACCOUNT' : 'LOGIN'}
+            </Link>
+            
           </div>
         </div>
       </header>
