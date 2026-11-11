@@ -7,7 +7,7 @@ import FormButtons from "./Home/FormButtons.js";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { supabase } from "./supabaseClient.js";
-import { useAuth } from "./AuthContext.js"
+import { useAuth } from "./AuthContext.js";
 
 // CONSTANTS - initial values used for both useState and resetForm
 const INITIAL_CUSTOMER = {
@@ -68,6 +68,13 @@ function Home() {
   const [resetKey, setResetKey] = useState(0);
   const [submitting, setSubmitting] = useState(false);
 
+  // CONSTANTS - file extension for each allowed photo type (the file's own name is not trusted)
+  const PHOTO_EXTENSIONS = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+  };
+
   // HANDLERS
   const navigate = useNavigate();
 
@@ -89,21 +96,23 @@ function Home() {
     setSubmitting(true);
 
     try {
-      // Map the camelCase form state to the snake_case table columns in supabase.
       // Optional fields use || null so empty strings are stored as NULL.
       // Upload the damage photo (if any) to Supabase Storage and keep its public URL
-        let photoUrl = null;
-        if (repairDetails.photo) {
-            const extension = repairDetails.photo.name.split(".").pop().toLowerCase();
-            const path = `${crypto.randomUUID()}.${extension}`;   // unique name so photos never overwrite each other
-            const { error: uploadError } = await supabase.storage
-                .from('repair-photos')
-                .upload(path, repairDetails.photo);
-            if (uploadError) throw uploadError;
-            photoUrl = supabase.storage.from('repair-photos').getPublicUrl(path).data.publicUrl;
-        }
+      let photoUrl = null;
+      if (repairDetails.photo) {
+        const extension = PHOTO_EXTENSIONS[repairDetails.photo.type] || "jpg";
+        const path = `${crypto.randomUUID()}.${extension}`; // unique name so photos never overwrite each other
+        
+        const { error: uploadError } = await supabase.storage
+          .from("repair-photos")
+          .upload(path, repairDetails.photo);
+        if (uploadError) throw uploadError;
+        photoUrl = supabase.storage.from("repair-photos").getPublicUrl(path)
+          .data.publicUrl;
+      }
+      // Map the camelCase form state to the snake_case table columns in supabase.
       const row = {
-        user_id: user?.id ?? null,   // links the booking to the account (null if logged out)
+        user_id: user?.id ?? null, // links the booking to the account (null if logged out)
         customer_type: sharedCustomerType,
 
         title: customerDetails.title,
@@ -138,11 +147,8 @@ function Home() {
         total_excl_gst: costDetails.totalExclGST,
         gst: costDetails.gst,
         total_incl_gst: costDetails.totalInclGST,
-        
       };
 
-      console.log(row);
-      
       const { error } = await supabase.from("bookings").insert(row);
       if (error) throw error;
 

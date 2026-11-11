@@ -25,7 +25,6 @@ function ScrollToTop() {
 
 // FUNCTION COMPONENT
 function App() {
-
   // UI RENDERING
   return (
     <>
@@ -33,33 +32,33 @@ function App() {
         {" "}
         {/* hide x scroll due to initial bootstrap margin settings */}
         <AuthProvider>
-        <BrowserRouter>
-          {/* ScrollToTop Function */}
-          <ScrollToTop />
+          <BrowserRouter>
+            {/* ScrollToTop Function */}
+            <ScrollToTop />
 
-          {/* Header Component */}
-          <Header />
+            {/* Header Component */}
+            <Header />
 
-          <Routes>
-            {/* Home Component */}
-            <Route path="/" element={<Home />} />
+            <Routes>
+              {/* Home Component */}
+              <Route path="/" element={<Home />} />
 
-            {/* Extension Component */}
-            <Route path="/AdvancedJS" element={<AdvancedJS />} />
+              {/* Extension Component */}
+              <Route path="/AdvancedJS" element={<AdvancedJS />} />
 
-            {/* FAQ Component */}
-            <Route path="/FAQ" element={<FAQ />} />
+              {/* FAQ Component */}
+              <Route path="/FAQ" element={<FAQ />} />
 
-            {/* Bookings Component */}
-            <Route path="/Bookings" element={<Bookings />} />
+              {/* Bookings Component */}
+              <Route path="/Bookings" element={<Bookings />} />
 
-            {/* Login / Register / Account Component */}
-            <Route path="/Login" element={<Login />} />
-          </Routes>
+              {/* Login / Register / Account Component */}
+              <Route path="/Login" element={<Login />} />
+            </Routes>
 
-          {/* Footer Component */}
-          <Footer />
-        </BrowserRouter>
+            {/* Footer Component */}
+            <Footer />
+          </BrowserRouter>
         </AuthProvider>
       </div>
     </>

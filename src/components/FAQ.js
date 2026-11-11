@@ -47,8 +47,8 @@ function FAQ() {
             <p>No questions match "{enteredKeywords.trim()}".</p>
           )}
 
-          {filteredFaqs.map((faq, index) => (
-            <div className="bg-light  border rounded p-3 m-2 mb-3" key={index}>
+          {filteredFaqs.map((faq) => (
+            <div className="bg-light  border rounded p-3 m-2 mb-3" key={faq.question}>
               <h4>{faq.question}</h4>
               <p className="mb-0">{faq.answer}</p>
             </div>

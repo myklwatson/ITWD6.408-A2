@@ -35,11 +35,7 @@ function FormCost({
     <div className="p-1">
       <h2>Cost</h2>
       <div className="row mb-3 mt-3 g-2 ms-3 me-2">
-        <label
-          htmlFor="bond"
-          id="bondLabel"
-          className="col-12 col-lg-4 "
-        >
+        <label htmlFor="bond" id="bondLabel" className="col-12 col-lg-4 ">
           Bond:
         </label>
         <input
@@ -86,11 +82,7 @@ function FormCost({
         />
       </div>
       <div className="row mb-3 g-2 ms-3 me-2">
-        <label
-          htmlFor="gst"
-          id="gstLabel"
-          className="col-12 col-lg-4 "
-        >
+        <label htmlFor="gst" id="gstLabel" className="col-12 col-lg-4 ">
           GST:
         </label>
         <input

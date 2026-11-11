@@ -142,8 +142,8 @@ function FormCourtesyPhone({
       {/*Choose items: drag between Available and Selected (clicking or pressing Enter also works)*/}
       <h5 className="ms-3 mt-3">Choose a Phone and/or Charger</h5>
       <p className="ms-3 me-3 small">
-        Drag an item into Selected, or click it. You can borrow only one phone and
-        one charger.
+        Drag an item into Selected, or click it. You can borrow only one phone
+        and one charger.
       </p>
       <div className="row ms-3 me-3 g-2 mb-3">
         {[

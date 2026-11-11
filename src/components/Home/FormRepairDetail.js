@@ -29,7 +29,8 @@ const isOverTwoYears = (value) => {
   return new Date(value + "T00:00:00") < cutoff;
 };
 
-
+// CONSTANTS - photo types accepted (same list as the Supabase bucket)
+const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 // FUNCTION COMPONENT
 function FormRepairDetail({ sendRepairDetails }) {
@@ -44,8 +45,8 @@ function FormRepairDetail({ sendRepairDetails }) {
     model: "",
     faultCategory: "Battery",
     faultDescription: "",
-    photo: null // File upload by customer
-    });
+    photo: null, // File upload by customer
+  });
 
   // Date Limits
   const today = new Date();
@@ -80,24 +81,32 @@ function FormRepairDetail({ sendRepairDetails }) {
     setRepairDetails((prev) => ({ ...prev, warranty: checked }));
   };
 
-      // Preview URL for the chosen photo (derived from state, released when it changes)
-    const photoPreview = useMemo(
-        () => (repairDetails.photo ? URL.createObjectURL(repairDetails.photo) : ""),
-        [repairDetails.photo]
-    );
-    useEffect(() => () => { if (photoPreview) URL.revokeObjectURL(photoPreview); }, [photoPreview]);
+  // Preview URL for the chosen photo (derived from state, released when it changes)
+  const photoPreview = useMemo(
+    () => (repairDetails.photo ? URL.createObjectURL(repairDetails.photo) : ""),
+    [repairDetails.photo],
+  );
+  useEffect(
+    () => () => {
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
+    },
+    [photoPreview],
+  );
 
-    // Only accept an image up to 5 MB
-    const handlePhotoChange = (event) => {
-        const file = event.target.files[0] || null;
-        if (file && (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024)) {
-            alert("Please choose an image (JPG, PNG or WebP) under 5 MB.");
-            event.target.value = "";
-            setRepairDetails((prev) => ({ ...prev, photo: null }));
-            return;
-        }
-        setRepairDetails((prev) => ({ ...prev, photo: file }));
-    };
+   // Only accept a JPG, PNG or WebP image up to 5 MB
+  const handlePhotoChange = (event) => {
+    const file = event.target.files[0] || null;
+    if (
+      file &&
+      (!ALLOWED_PHOTO_TYPES.includes(file.type) || file.size > 5 * 1024 * 1024)
+    ) {
+      alert("Please choose an image (JPG, PNG or WebP) under 5 MB.");
+      event.target.value = "";
+      setRepairDetails((prev) => ({ ...prev, photo: null }));
+      return;
+    }
+    setRepairDetails((prev) => ({ ...prev, photo: file }));
+  };
 
   // Send repair details to Home whenever they change (also runs on mount, which resyncs after a reset)
   useEffect(() => {
@@ -289,17 +298,28 @@ function FormRepairDetail({ sendRepairDetails }) {
           required
         />
       </div>
-      
+
       {/*Photo of the broken phone (optional)*/}
       <div className="row mb-2 g-2 ms-2 me-2">
-        <label htmlFor="photo" className="col-12 col-md-12 col-lg-4">Photo of damage:</label>
-          <div className="col-12 col-md-12 col-lg-7 p-0">
-              <input id="photo" type="file" accept="image/jpeg,image/png,image/webp"
-                    className="form-control" onChange={handlePhotoChange} />
-              {photoPreview && (
-              <img src={photoPreview} alt="Preview of the chosen damage" className="img-thumbnail mt-2"
-                    style={{ maxHeight: "150px" }} />
-              )}
+        <label htmlFor="photo" className="col-12 col-md-12 col-lg-4">
+          Photo of damage:
+        </label>
+        <div className="col-12 col-md-12 col-lg-7 p-0">
+          <input
+            id="photo"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="form-control"
+            onChange={handlePhotoChange}
+          />
+          {photoPreview && (
+            <img
+              src={photoPreview}
+              alt="Preview of the chosen damage"
+              className="img-thumbnail mt-2"
+              style={{ maxHeight: "150px" }}
+            />
+          )}
         </div>
       </div>
     </div>
