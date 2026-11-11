@@ -135,6 +135,13 @@ function AdvancedJS() {
               any other academic course, is included without acknowledgement.
             </li>
           </ul>
+            <p className="small mt-2 mb-0">
+              <strong>Acknowledgement of AI assistance:</strong> As encouraged for this
+                      extension, I used Claude (Anthropic) to help plan, write and debug the
+                      advanced JavaScript features described below. I reviewed, tested and
+                      adapted the code, and I understand how each feature works. Other
+                      borrowed material is acknowledged in each feature's entry.
+            </p>
         </div>
 
         {/* Accordion Display */}
