@@ -30,6 +30,7 @@ const INITIAL_REPAIR = {
   model: "",
   faultCategory: "Battery",
   faultDescription: "",
+  photo: null,
 };
 const INITIAL_COURTESY = {
   phoneBorrow: "",
@@ -87,6 +88,17 @@ function Home() {
     try {
       // Map the camelCase form state to the snake_case table columns in supabase.
       // Optional fields use || null so empty strings are stored as NULL.
+      // Upload the damage photo (if any) to Supabase Storage and keep its public URL
+        let photoUrl = null;
+        if (repairDetails.photo) {
+            const extension = repairDetails.photo.name.split(".").pop().toLowerCase();
+            const path = `${crypto.randomUUID()}.${extension}`;   // unique name so photos never overwrite each other
+            const { error: uploadError } = await supabase.storage
+                .from('repair-photos')
+                .upload(path, repairDetails.photo);
+            if (uploadError) throw uploadError;
+            photoUrl = supabase.storage.from('repair-photos').getPublicUrl(path).data.publicUrl;
+        }
       const row = {
         customer_type: sharedCustomerType,
 
@@ -110,6 +122,7 @@ function Home() {
         model: repairDetails.model || null,
         fault_category: repairDetails.faultCategory,
         fault_description: repairDetails.faultDescription,
+        photo_url: photoUrl,
 
         phone_borrow: courtesyPhoneDetails.phoneBorrow || null,
         phone_cost: courtesyPhoneDetails.phoneCost,

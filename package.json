@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mapbox/search-js-react": "^1.6.0",
     "@supabase/supabase-js": "^2.118.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^6.9.1",
@@ -41,6 +42,7 @@
   },
   "allowScripts": {
     "core-js@3.50.0": true,
-    "core-js-pure@3.50.0": true
+    "core-js-pure@3.50.0": true,
+    "fsevents@2.3.3": true
   }
 }

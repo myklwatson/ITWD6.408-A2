@@ -39,14 +39,85 @@ function FormCourtesyPhone({
   const [phoneId, setPhoneId] = useState(0);
   const [chargerId, setChargerId] = useState(0);
 
+  // STATE - drag and drop: which zone the dragged item came from, and which zone it is over
+  const [dragSource, setDragSource] = useState(null); // 'available' or 'selected'
+  const [dragOverZone, setDragOverZone] = useState(null); // used to highlight the zone under the cursor
+
   // DERIVED VALUES - calculated from state, not stored
   const phone = COURTESY_LIST.find((item) => item.id === phoneId);
   const charger = COURTESY_LIST.find((item) => item.id === chargerId);
   const totalBond = phone.bond + charger.bond;
 
+  // DERIVED VALUES - which items sit in each drag and drop zone
+  const selectedItems = [phone, charger].filter((item) => item.id !== 0);
+  const availableItems = COURTESY_LIST.filter(
+    (item) => item.id !== 0 && item.id !== phoneId && item.id !== chargerId,
+  );
+
   // HANDLERS
-  const addPhone = (event) => setPhoneId(Number(event.target.value));
-  const addCharger = (event) => setChargerId(Number(event.target.value));
+  // Choosing a phone or charger replaces the previous one of the same type
+  const selectItem = (item) => {
+    if (item.type === "phone") setPhoneId(item.id);
+    else setChargerId(item.id);
+  };
+
+  // Moving an item back to Available empties its slot
+  const removeItem = (item) => {
+    if (item.type === "phone") setPhoneId(0);
+    else setChargerId(0);
+  };
+
+  // Click and keyboard use the same rule: selected items go back, available items are selected
+  const toggleItem = (item) => {
+    if (item.id === phoneId || item.id === chargerId) removeItem(item);
+    else selectItem(item);
+  };
+
+  // DRAG AND DROP HANDLERS (HTML5 Drag and Drop API)
+  const handleDragStart = (event, item, zone) => {
+    event.dataTransfer.setData("text/plain", String(item.id)); // the id travels with the drag
+    event.dataTransfer.effectAllowed = "move";
+    setDragSource(zone);
+  };
+
+  const handleDragEnd = () => {
+    setDragSource(null);
+    setDragOverZone(null);
+  };
+
+  // preventDefault() is what allows a drop; a zone only accepts items from the other zone
+  const handleDragOver = (event, zone) => {
+    if (dragSource && dragSource !== zone) {
+      event.preventDefault();
+      setDragOverZone(zone);
+    }
+  };
+
+  // Only clear the highlight when the cursor really leaves the zone, not when it moves over an item inside it
+  const handleDragLeave = (event) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setDragOverZone(null);
+    }
+  };
+
+  const handleDrop = (event, zone) => {
+    event.preventDefault();
+    const droppedId = Number(event.dataTransfer.getData("text/plain"));
+    const item = COURTESY_LIST.find((entry) => entry.id === droppedId);
+    if (item && dragSource !== zone) {
+      if (zone === "selected") selectItem(item);
+      else removeItem(item);
+    }
+    handleDragEnd();
+  };
+
+  // Keyboard support: Enter or Space moves the focused item, the same as a drop
+  const handleItemKeyDown = (event, item) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleItem(item);
+    }
+  };
 
   // Send total bond to Home
   useEffect(() => {
@@ -68,91 +139,74 @@ function FormCourtesyPhone({
     <div className="p-1">
       <h2>Courtesy Phone</h2>
 
-      {/*Phone items*/}
-      <h5 className="ms-3 mt-3">Choose a Phone</h5>
-      <div className="row mb-3 ms-3 g-2 me-3">
-        <label htmlFor="phoneList" className="col-12 col-md-12 col-lg-4">
-          Item Type{" "}
-        </label>
-        <select
-          className="col-12 col-md-12 col-lg-7"
-          id="phoneList"
-          value={phoneId}
-          onChange={addPhone}
-        >
-          <option value={0}>None</option>
-          {COURTESY_LIST.filter((item) => item.type === "phone").map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/*Choose items: drag between Available and Selected (clicking or pressing Enter also works)*/}
+      <h5 className="ms-3 mt-3">Choose a Phone and/or Charger</h5>
+      <p className="ms-3 me-3 small">
+        Drag an item into Selected, or click it. You can borrow only one phone and
+        one charger.
+      </p>
+      <div className="row ms-3 me-3 g-2 mb-3">
+        {[
+          { zone: "available", title: "Available", items: availableItems },
+          { zone: "selected", title: "Selected", items: selectedItems },
+        ].map(({ zone, title, items }) => (
+          <div key={zone} className="col-6">
+            <div
+              className={`border border-2 rounded p-2 h-100 ${
+                dragOverZone === zone
+                  ? "bg-success-subtle border-success"
+                  : "bg-white"
+              }`}
+              style={{
+                borderStyle: "dashed",
+                minHeight: "12em",
+                maxHeight: "16em",
+                overflowY: "auto",
+              }}
+              onDragOver={(event) => handleDragOver(event, zone)}
+              onDragLeave={handleDragLeave}
+              onDrop={(event) => handleDrop(event, zone)}
+            >
+              <div className="fw-bold small mb-2">{title}</div>
 
-      {/*Charger items*/}
-      <h5 className="row mt-2 ms-3 g-2">Choose a Charger</h5>
-      <div className="row mb-4 ms-3 g-2 me-3">
-        <label htmlFor="chargerList" className="col-12 col-md-12 col-lg-4">
-          Item Type{" "}
-        </label>
-        <select
-          className="col-12 col-md-12 col-lg-7"
-          id="chargerList"
-          value={chargerId}
-          onChange={addCharger}
-        >
-          <option value={0}>None</option>
-          {COURTESY_LIST.filter((item) => item.type === "charger").map(
-            (item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ),
-          )}
-        </select>
-      </div>
+              {items.length === 0 && (
+                <span className="text-muted small">
+                  {zone === "selected"
+                    ? "Drop a phone or charger here"
+                    : "No items left"}
+                </span>
+              )}
 
-      {/*Table of selected Courtesy items*/}
-      <h5 className="ms-3 mt-2 ">Borrow Items</h5>
-      <div className="row mt-2 mb-4 ms-3 me-4 bg-white">
-        <table className="table table-bordered mb-0">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/*Display phone item if selected*/}
-            {phoneId !== 0 && (
-              <tr>
-                <td>{phone.name}</td>
-                <td
-                  className={
-                    isBusiness ? "text-decoration-line-through text-muted" : ""
-                  }
+              {items.map((item) => (
+                <div
+                  key={item.id}
+                  role="button"
+                  tabIndex={0}
+                  draggable
+                  className="border rounded bg-light px-2 py-1 mb-1 small d-flex justify-content-between"
+                  style={{ cursor: "grab" }}
+                  onDragStart={(event) => handleDragStart(event, item, zone)}
+                  onDragEnd={handleDragEnd}
+                  onClick={() => toggleItem(item)}
+                  onKeyDown={(event) => handleItemKeyDown(event, item)}
                 >
-                  {toNZD(phone.bond)}
-                </td>
-              </tr>
-            )}
-
-            {/*Display charger item if selected*/}
-            {chargerId !== 0 && (
-              <tr>
-                <td>{charger.name}</td>
-                <td
-                  className={
-                    isBusiness ? "text-decoration-line-through text-muted" : ""
-                  }
-                >
-                  {toNZD(charger.bond)}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                  <span>{item.name}</span>
+                  <span
+                    className={
+                      isBusiness && zone === "selected"
+                        ? "text-decoration-line-through text-muted"
+                        : ""
+                    }
+                  >
+                    {toNZD(item.bond)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
+
       {isBusiness && (
         <p className="small fst-italic fw-bold ms-3">
           Bond not required for business customers.

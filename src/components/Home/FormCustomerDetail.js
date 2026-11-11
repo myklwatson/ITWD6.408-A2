@@ -1,5 +1,7 @@
 // IMPORT
 import { useState, useEffect } from "react";
+import { AddressAutofill } from "@mapbox/search-js-react"; // Mapbox Address Autofill 
+
 
 // FUNCTION COMPONENT
 function FormCustomerDetail({ passDataToParent, sendCustomerDetails }) {
@@ -19,6 +21,10 @@ function FormCustomerDetail({ passDataToParent, sendCustomerDetails }) {
     email: "",
   });
 
+  // CONSTANTS
+  // Public Mapbox token
+  const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
+  
   // HANDLERS
   // UPDATE CUSTOMER TYPE AND PASS TO PARENT
   const updateCustomerType = (event) => {
@@ -30,6 +36,19 @@ function FormCustomerDetail({ passDataToParent, sendCustomerDetails }) {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setCustomerDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Mapbox calls this when the user picks a suggestion:
+  // the inputs are controlled by React, so state must be updated, not just the screen
+  const handleRetrieve = (response) => {
+      const address = response.features[0].properties;
+      setCustomerDetails(prev => ({
+          ...prev,
+          street: address.address_line1 || prev.street,
+          suburb: address.address_level3 || "",
+          city: address.address_level2 || prev.city,
+          postCode: address.postcode || ""
+      }));
   };
 
   // SEND CUSTOMER DETAILS TO PARENT COMPONENT
@@ -140,65 +159,82 @@ function FormCustomerDetail({ passDataToParent, sendCustomerDetails }) {
           } // pattern validation
           onChange={handleChange}
           required
-        />
+        /> 
       </div>
-      <div className="row mb-3 g-2 ms-2 me-2">
-        <label htmlFor="street" className="col-12 col-lg-4 ">
-          Street: *
-        </label>
-        <input
-          className="col-12 col-lg-7"
-          type="text"
-          id="street"
-          name="street"
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div className="row mb-3 g-2 ms-2 me-2">
-        <label htmlFor="suburb" className="col-12 col-lg-4 ">
-          Suburb:
-        </label>
-        <input
-          className="col-12 col-lg-7"
-          type="text"
-          id="suburb"
-          name="suburb"
-          onChange={handleChange}
-        />
-      </div>
-      <div className="row mb-3 g-2 ms-2 me-2">
-        <label htmlFor="city" className="col-12 col-lg-4 ">
-          City: *
-        </label>
-        <input
-          className="col-12 col-lg-7"
-          type="text"
-          id="city"
-          name="city"
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div className="row mb-3 g-2 ms-2 me-2">
-        <label htmlFor="postCode" className="col-12 col-lg-4 ">
-          PostCode:
-        </label>
-        <input
-          className="col-12 col-lg-7"
-          type="text"
-          id="postCode"
-          name="postCode"
-          onChange={handleChange}
-          inputMode="numeric"
-          pattern="[0-9]{4}"
-          maxLength={4} // postcode must be 4 digits
-          title="Postcode must be 4 digits"
-          onInput={(e) => {
-            e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
-          }}
-        />
-      </div>
+      <AddressAutofill
+        accessToken={MAPBOX_TOKEN}
+        options={{ country: "NZ" }}
+        onRetrieve={handleRetrieve}
+      >
+        <div>
+          <div className="row mb-3 g-2 ms-2 me-2">
+            <label htmlFor="street" className="col-12 col-lg-4 ">
+              Street: *
+            </label>
+            <input
+              className="col-12 col-lg-7"
+              type="text"
+              id="street"
+              name="street"
+              autoComplete="address-line1"
+              placeholder=""
+              value={customerDetails.street}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="row mb-3 g-2 ms-2 me-2">
+            <label htmlFor="suburb" className="col-12 col-lg-4 ">
+              Suburb:
+            </label>
+            <input
+              className="col-12 col-lg-7"
+              type="text"
+              id="suburb"
+              name="suburb"
+              autoComplete="address-level3"
+              value={customerDetails.suburb}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="row mb-3 g-2 ms-2 me-2">
+            <label htmlFor="city" className="col-12 col-lg-4 ">
+              City: *
+            </label>
+            <input
+              className="col-12 col-lg-7"
+              type="text"
+              id="city"
+              name="city"
+              autoComplete="address-level2"
+              value={customerDetails.city}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="row mb-3 g-2 ms-2 me-2">
+            <label htmlFor="postCode" className="col-12 col-lg-4 ">
+              PostCode:
+            </label>
+            <input
+              className="col-12 col-lg-7"
+              type="text"
+              id="postCode"
+              name="postCode"
+              autoComplete="postal-code"
+              value={customerDetails.postCode}
+              onChange={handleChange}
+              inputMode="numeric"
+              pattern="[0-9]{4}"
+              maxLength={4} // postcode must be 4 digits
+              title="Postcode must be 4 digits"
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
+              }}
+            />
+          </div>
+        </div>
+      </AddressAutofill>
       <div className="row mb-3 g-2 ms-2 me-2">
         <label htmlFor="phone" className="col-12 col-lg-4 ">
           Phone: *
