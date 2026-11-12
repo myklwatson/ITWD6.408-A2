@@ -193,7 +193,7 @@ function Home() {
         </div>
 
         {/*Courtesy Phone & Cost*/}
-        <div className="col-12 col-lg-4 p-0 m-0">
+        <div className="col-12 col-lg-4 p-0 m-0 d-flex flex-column">
           {/*Courtesy phone*/}
           <div
             className="p-3"
@@ -209,7 +209,7 @@ function Home() {
 
           {/*Cost*/}
           <div
-            className="p-3"
+            className="p-3 flex-grow-1"
             style={{ minHeight: "20vh", backgroundColor: "#de8b6f" }}
           >
             <FormCost
